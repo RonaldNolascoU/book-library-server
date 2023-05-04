@@ -1,0 +1,17 @@
+{
+  "name": "book-library-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "@types/node": "^18.16.3",
+    "apollo-server": "^3.12.0",
+    "apollo-server-core": "^3.12.0",
+    "graphql": "^16.6.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
