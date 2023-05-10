@@ -7,13 +7,11 @@ import checkIsLoggedIn from '../middleware/checkIfLoggedIn'
 import { UserModel } from '../models/user.model'
 
 const cookieOptions = {
-  httpOnly: true,
-  // domain: 'localhost',
-  sameSite: 'none',
-  secure: true
+  domain: 'localhost',
+  path: '/'
 }
 
-if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+// if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
 
 interface LoginInput {
   email: string
@@ -21,15 +19,12 @@ interface LoginInput {
 }
 
 // ? SignUp User
-const signup = async ({
-  input: { name, email, password, passwordConfirm }
-}) => {
+const signup = async ({ input: { name, email, password } }) => {
   try {
     const user = await UserModel.create({
       name,
       email,
-      password,
-      passwordConfirm
+      password
     })
 
     return {
@@ -45,7 +40,7 @@ const signup = async ({
 }
 
 // ? Sign Tokens
-async function signTokens(user) {
+export async function signTokens(user) {
   // Create access token
   const access_token = signJwt(
     { user: user.id },
@@ -64,7 +59,7 @@ const login = async (
 ): Promise<any> => {
   try {
     // Check if user exist and password is correct
-    const user: any = await UserModel.findOne({ email }).select('+password')
+    const user: any = await UserModel.findOne({ email })
     if (!user || !(await UserModel.comparePasswords(password, user.password))) {
       throw new AuthenticationError('Invalid email or password')
     }
@@ -74,7 +69,7 @@ const login = async (
     const { access_token } = await signTokens(user)
 
     // Add refreshToken to cookie
-    res.cookie('access_token', access_token, { httpOnly: true })
+    res.cookie('access_token', access_token, { ...cookieOptions })
     res.cookie('logged_in', true, { httpOnly: false })
 
     return {
