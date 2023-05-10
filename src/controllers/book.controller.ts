@@ -1,9 +1,6 @@
 import checkIsLoggedIn from '../middleware/checkIfLoggedIn.ts'
 import errorHandler from './error.controller.ts'
 
-import { createWriteStream } from 'fs'
-import { join } from 'path'
-import { v4 as uuidv4 } from 'uuid'
 import { BookModel } from '../models/book.model.ts'
 import { uploadImage } from '../../services/cloudinary.ts'
 import slugify from 'slugify'
@@ -13,7 +10,7 @@ import pubsub from '../../graphql/subscription.ts'
 const createNewBook = async (
   parent: any,
   { input: { title, author, date, collectionSection, coverImage } }: any,
-  { req, res, getAuthUser }: { req: Request; res: Response; getAuthUser: any }
+  { req, getAuthUser }: { req: any; getAuthUser: any }
 ): Promise<any> => {
   try {
     const loggedInUser = await checkIsLoggedIn(req, getAuthUser)
